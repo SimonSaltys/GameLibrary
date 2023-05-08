@@ -14,8 +14,7 @@ public class GameHeartbeat extends Countdown {
     private final Game game;
 
     public GameHeartbeat(Game game) {
-        super(SimpleTime.fromSeconds(10));
-
+        super(SimpleTime.fromSeconds(100));
         this.game = game;
     }
 

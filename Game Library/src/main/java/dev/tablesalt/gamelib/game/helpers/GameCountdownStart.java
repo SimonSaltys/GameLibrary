@@ -3,6 +3,7 @@ package dev.tablesalt.gamelib.game.helpers;
 import dev.tablesalt.gamelib.game.enums.GameState;
 import dev.tablesalt.gamelib.game.enums.State;
 import org.bukkit.entity.Player;
+import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.model.Countdown;
 import org.mineacademy.fo.model.SimpleTime;
@@ -14,8 +15,7 @@ import org.mineacademy.fo.model.SimpleTime;
 public class GameCountdownStart extends Countdown {
     private final Game game;
     public GameCountdownStart(Game game) {
-//        super(game.getLobbyDuration());
-        super(SimpleTime.fromSeconds(10));
+        super(game.getLobbyDuration());
         this.game = game;
     }
 
@@ -48,6 +48,7 @@ public class GameCountdownStart extends Countdown {
             startGameForAll();
 
         } catch (Throwable t) {
+            Common.throwError(t,"Failed to start game " + name + " stopping for safety");
             game.getStopper().stop();
         }
     }

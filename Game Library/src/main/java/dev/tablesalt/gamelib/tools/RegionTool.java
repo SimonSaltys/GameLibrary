@@ -12,6 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.mineacademy.fo.menu.Menu;
+import org.mineacademy.fo.menu.button.ButtonRemove;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
 import org.mineacademy.fo.visual.VisualizedRegion;
@@ -30,6 +32,7 @@ public final class RegionTool extends GameTool<Game> {
         VisualizedRegion region = map.getRegion();
 
 
+
         if (isPrimaryClick)
             region.updateLocation(block.getLocation(), null);
         else
@@ -41,7 +44,6 @@ public final class RegionTool extends GameTool<Game> {
     protected VisualizedRegion getVisualizedRegion(Player player) {
         Game game = PlayerCache.from(player).getGameIdentifier().getCurrentGame();
         PlayerCache cache = PlayerCache.from(player);
-
         if(cache.getGameIdentifier().hasGame())
             return game.getMapRotator().getCurrentMap().getRegion();
 

@@ -53,25 +53,6 @@ public final class GameListener implements Listener {
         cache.removeFromMemory();
     }
 
-
-    @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        PlayerCache cache = PlayerCache.from(player);
-        Action action = event.getAction();
-        Game game = Game.findByLocation(event.hasBlock() ? event.getClickedBlock().getLocation() : player.getLocation());
-
-        if (game == null) {
-            return;
-        }
-
-        if (cache.getMode() != null && cache.getMode().equals(GameJoinMode.EDITING))
-            return;
-
-        event.setCancelled(true);
-        player.updateInventory();
-    }
-
     @EventHandler
     public void onHunger(FoodLevelChangeEvent event) {
         event.setCancelled(true);

@@ -50,7 +50,7 @@ public class Stopper {
           }
     }
 
-    void onGameStop() {
+    protected void onGameStop() {
 
     }
 
