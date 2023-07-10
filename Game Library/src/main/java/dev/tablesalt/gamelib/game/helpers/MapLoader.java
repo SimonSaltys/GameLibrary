@@ -51,6 +51,9 @@ public class MapLoader {
         Valid.checkBoolean(!isMapLoaded(name), "Map " + name + " is already loaded!");
         GameMap map = GameMap.instantiate(name,game);
         mapsForGame.add(map);
+
+        if (game.getState().isStopped())
+            game.getMapRotator().setCurrentMap(map);
     }
 
     public List<GameMap> getMaps() {

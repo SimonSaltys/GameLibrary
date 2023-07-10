@@ -1,6 +1,7 @@
 package dev.tablesalt.gamelib.game.helpers;
 
 import dev.tablesalt.gamelib.game.map.GameMap;
+import dev.tablesalt.gamelib.game.utils.GameUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.mineacademy.fo.RandomUtil;
@@ -28,6 +29,10 @@ public class MapRotator {
 
     public GameMap getCurrentMap() {
         return currentMap;
+    }
+
+    public void setCurrentMap(GameMap map) {
+            currentMap = map;
     }
 
 

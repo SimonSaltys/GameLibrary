@@ -18,7 +18,7 @@
 
         <main.class>dev.tablesalt.gamelib.GameLib</main.class>
 
-        <foundation.version>6.3.3</foundation.version>
+        <foundation.version>6.4.2</foundation.version>
 
         <foundation.path>com.github.kangarko</foundation.path>
 
@@ -66,36 +66,36 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-shade-plugin</artifactId>-->
 
-                <!-- Change version to the latest one from
-                     https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin -->
-                <version>3.4.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <artifactSet>
-                        <includes>
-                            <include>${foundation.path}:Foundation*</include>
-                        </includes>
-                    </artifactSet>
-                    <relocations>
-                        <relocation>
-                            <pattern>org.mineacademy.fo</pattern>-->
-                            <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
-                        </relocation>
-                    </relocations>
-                </configuration>
-            </plugin>
+<!--                &lt;!&ndash; Change version to the latest one from-->
+<!--                     https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-shade-plugin &ndash;&gt;-->
+<!--                <version>3.4.1</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>shade</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <createDependencyReducedPom>false</createDependencyReducedPom>-->
+<!--                    <artifactSet>-->
+<!--                        <includes>-->
+<!--                            <include>${foundation.path}:Foundation*</include>-->
+<!--                        </includes>-->
+<!--                    </artifactSet>-->
+<!--                    <relocations>-->
+<!--                        <relocation>-->
+<!--                            <pattern>org.mineacademy.fo</pattern>&ndash;&gt;-->
+<!--                            <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>-->
+<!--                        </relocation>-->
+<!--                    </relocations>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
             <!-- Copy the built jar to a local directory. (Just for my use only... comment out if someone else is using) -->
 <!--            <plugin>-->
 <!--                <groupId>org.apache.maven.plugins</groupId>-->

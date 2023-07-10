@@ -31,8 +31,6 @@ public final class RegionTool extends GameTool<Game> {
         GameMap map = game.getMapRotator().getCurrentMap();
         VisualizedRegion region = map.getRegion();
 
-
-
         if (isPrimaryClick)
             region.updateLocation(block.getLocation(), null);
         else

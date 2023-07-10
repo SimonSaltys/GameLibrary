@@ -1,8 +1,6 @@
 package dev.tablesalt.gamelib.game.types;
 
-import dev.tablesalt.gamelib.GameSettings;
 import lombok.Getter;
-import org.bukkit.plugin.Plugin;
 
 @Getter
 public class Type<T> {
