@@ -11,6 +11,7 @@ import org.mineacademy.fo.settings.ConfigItems;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class MapLoader {
@@ -54,6 +55,19 @@ public class MapLoader {
 
         if (game.getState().isStopped())
             game.getMapRotator().setCurrentMap(map);
+    }
+
+    public void deleteMap(GameMap map) {
+
+        Iterator<GameMap> itr = mapsForGame.listIterator();
+        while (itr.hasNext()) {
+            GameMap searchedMap = itr.next();
+
+            if (searchedMap.equals(map))
+                itr.remove();
+
+            searchedMap.deleteFile();
+        }
     }
 
     public List<GameMap> getMaps() {

@@ -81,4 +81,12 @@ public abstract class GameMap extends YamlConfig {
         Common.broadcast("&aInstantiating map: " + name + " for game: " + game.getName());
         return (T) ReflectionUtil.instantiate(constructor, name, game);
     }
+
+    public static GameMap findMapFromLocation(Location location) {
+        for (Game checkGame : Game.getGames())
+            for (GameMap map : checkGame.getMapLoader().getMaps())
+                if (map.getRegion().isWithin(location))
+                    return map;
+        return null;
+    }
 }

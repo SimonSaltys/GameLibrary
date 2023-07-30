@@ -52,10 +52,14 @@ public class GameScoreboard extends SimpleScoreboard {
     protected String replaceVariablesLate(Player player, String message) { return message; }
 
     public final void onPlayerJoin(Player player) {
+        SimpleScoreboard.clearBoardsFor(player);
+
         show(player);
     }
 
     public final void onPlayerLeave(Player player) {
+        SimpleScoreboard.clearBoardsFor(player);
+
         if (isViewing(player))
             hide(player);
     }

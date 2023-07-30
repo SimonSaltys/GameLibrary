@@ -240,11 +240,28 @@ public abstract class Game extends YamlConfig {
     }
 
     /**
-     * Attempts to remove the game by the provided name
-     * @param gameName the name of the game to remove
+     * Attempts to remove the game provided
      */
-    public static void removeGame(final String gameName) {
-        // TODO: 4/11/2023
+    public static void removeGame(final Game game) {
+        List<Game> foundList = null;
+
+      for (List<Game> gameList : LOADED_GAME_FILES_MAP.values()) {
+          for (Game searchedGame : gameList)
+              if (searchedGame.equals(game))
+                  foundList = gameList;
+      }
+
+      if (foundList != null) {
+          MapLoader loader = game.getMapLoader();
+          for (GameMap map : loader.getMaps())
+              loader.deleteMap(map);
+
+
+          foundList.remove(game);
+          game.deleteFile();
+      }
+
+
     }
 
     public static Game getGame(String gameName) {

@@ -91,7 +91,6 @@ public abstract class SimpleRunnable implements Runnable{
             }
         else {
             this.cancel();
-            this.onEnd();
         }
     }
 
@@ -148,6 +147,11 @@ public abstract class SimpleRunnable implements Runnable{
 
         this.taskId = -1;
         this.secondsSinceStart = 0;
+    }
+
+    public final void end() {
+        cancel();
+        onEnd();
     }
 
     /**

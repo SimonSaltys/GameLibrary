@@ -4,10 +4,13 @@ import dev.tablesalt.gamelib.game.enums.State;
 import dev.tablesalt.gamelib.game.utils.GameUtil;
 import dev.tablesalt.gamelib.game.enums.GameJoinMode;
 import dev.tablesalt.gamelib.game.map.GameMap;
+import dev.tablesalt.gamelib.game.utils.MessageUtil;
 import dev.tablesalt.gamelib.players.PlayerCache;
 import dev.tablesalt.gamelib.players.helpers.PlayerStateIdentifier;
 import dev.tablesalt.gamelib.tools.RegionTool;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
@@ -36,8 +39,7 @@ public class PlayerJoiner {
 
         game.addPlayer(cache);
         game.getStarter().startBasedOnMode(mode);
-        game.getGameBroadcaster().broadcast("&6" + player.getName() + " &7has joined the game! " +
-                "(" + game.getPlayersInGame().size() + "/" + game.getMaxPlayers() + ")");
+        broadcastJoinMessage(player);
 
         game.scoreboard.onPlayerJoin(player);
         GameUtil.checkIntegrity(game);
@@ -145,5 +147,16 @@ public class PlayerJoiner {
         cache.getGameIdentifier().setCurrentGame(game);
 
         return true;
+    }
+
+    private void broadcastJoinMessage(Player player) {
+        game.getGameBroadcaster().broadcast(MessageUtil.getMiniMessage().deserialize(
+                "<gold> <player> <grey> has joined the game! (<current_players> / <max_players>)",
+
+                Placeholder.parsed("player",player.getName()),
+                Formatter.number("current_players", game.getPlayersInGame().size()),
+                Formatter.number("max_players",game.getMaxPlayers())
+        ));
+
     }
 }

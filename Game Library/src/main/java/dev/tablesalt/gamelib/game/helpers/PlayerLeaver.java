@@ -1,10 +1,15 @@
 package dev.tablesalt.gamelib.game.helpers;
 
+import dev.tablesalt.gamelib.event.PlayerLeaveGameEvent;
 import dev.tablesalt.gamelib.game.enums.GameJoinMode;
 import dev.tablesalt.gamelib.game.utils.Message;
+import dev.tablesalt.gamelib.game.utils.MessageUtil;
 import dev.tablesalt.gamelib.players.PlayerCache;
 import dev.tablesalt.gamelib.players.helpers.GameIdentifier;
 import lombok.RequiredArgsConstructor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.tag.resolver.Formatter;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
@@ -36,22 +41,14 @@ public class PlayerLeaver {
 
             if (game.getPlayersInGame().isEmpty())
                 game.getStopper().stop();
-            else {
+            else
+                broadcastMessages(player,message);
 
-                if (message != null)
-                    game.getGameBroadcaster().broadcastInfo(message.getMessage());
-                else if(game.getState().isLobby()) {
-                    game.getGameBroadcaster().broadcast("&6" + player.getName() + " &7has left the game! " +
-                            "(" + game.getPlayerGetter().getPlayers(GameJoinMode.PLAYING).size() + "/" + game.getMaxPlayers() + ")");
-                    Messenger.success(player, "You've left " + cache.getMode().getLocalized() + " the game " + name + "!");
-                }
-            }
         } finally {
             cache.reset();
         }
 
     }
-
 
     /*----------------------------------------------------------------*/
     /* PRIVATE */
@@ -62,8 +59,37 @@ public class PlayerLeaver {
 
         game.scoreboard.onPlayerLeave(player);
         game.removePlayer(cache);
+        Common.callEvent(new PlayerLeaveGameEvent(player,game));
 
         callOnGameLeaveFor(player);
+    }
+
+    private void broadcastMessages(Player player, Message message) {
+        if (message != null)
+            game.getGameBroadcaster().broadcastInfo(message.getMessage());
+
+        else if(game.getState().isLobby()) {
+            broadcastLeave(player);
+            sendLeaveMessage(player);
+        }
+    }
+
+    private void broadcastLeave(Player player) {
+        game.getGameBroadcaster().broadcast(MessageUtil.makeMini(
+                "<gold> <player> <grey> has left the game! (<current_players> / <max_players>)",
+
+                Placeholder.parsed("player",player.getName()),
+                Formatter.number("current_players", game.getPlayerGetter().getPlayers(GameJoinMode.PLAYING).size()),
+                Formatter.number("max_players",game.getMaxPlayers())
+        ));
+    }
+
+    private void sendLeaveMessage(Player player) {
+        player.sendMessage(MessageUtil.makeMini("You've left <mode_of_play> the game <name>!",
+                Placeholder.parsed("mode_of_play", PlayerCache.from(player).getMode().getLocalized()),
+                Placeholder.parsed("name",game.getName())
+        ));
+
     }
 
     private void callOnGameLeaveFor(Player player) {

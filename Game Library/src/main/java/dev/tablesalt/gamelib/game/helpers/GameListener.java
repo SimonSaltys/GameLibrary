@@ -1,22 +1,16 @@
 package dev.tablesalt.gamelib.game.helpers;
 
-import dev.tablesalt.gamelib.game.enums.GameJoinMode;
 import dev.tablesalt.gamelib.game.utils.Message;
 import dev.tablesalt.gamelib.players.PlayerCache;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.mineacademy.fo.Common;
-import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.annotation.AutoRegister;
-import org.mineacademy.fo.remain.Remain;
 
 @AutoRegister
 public final class GameListener implements Listener {
