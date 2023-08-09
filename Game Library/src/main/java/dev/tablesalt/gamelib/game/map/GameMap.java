@@ -23,7 +23,7 @@ public abstract class GameMap extends YamlConfig {
     @Getter
     private VisualizedRegion region;
     @Getter
-    private Location lobbyLocation;
+    private VisualizedRegion lobbyRegion;
 
     protected final Game game;
 
@@ -42,7 +42,7 @@ public abstract class GameMap extends YamlConfig {
     @Override
     protected void onLoad() {
         this.region = get("Region", VisualizedRegion.class, new VisualizedRegion());
-        this.lobbyLocation = getLocation("Lobby_Location");
+        this.lobbyRegion = get("Lobby_Region",VisualizedRegion.class, new VisualizedRegion());
         this.save();
     }
 
@@ -52,15 +52,15 @@ public abstract class GameMap extends YamlConfig {
     @Override
     protected void onSave() {
         this.set("Region", this.region);
-        this.set("Lobby_Location", this.lobbyLocation);
+        this.set("Lobby_Region", this.lobbyRegion);
     }
 
     public boolean isSetup() {
-        return lobbyLocation != null && (region != null && region.isWhole());
+        return (lobbyRegion != null && lobbyRegion.isWhole()) && (region != null && region.isWhole());
     }
 
-    public final void setLobbyLocation(Location lobbyLocation) {
-        this.lobbyLocation = lobbyLocation;
+    public final void setLobbyLocation(VisualizedRegion lobbyRegion) {
+        this.lobbyRegion = lobbyRegion;
         save();
     }
 

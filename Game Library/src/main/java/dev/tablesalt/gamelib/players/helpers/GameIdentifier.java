@@ -31,6 +31,10 @@ public class GameIdentifier {
         return null;
     }
 
+    public boolean currentGameEquals(Game game) {
+        return hasGame() && getCurrentGame().equals(game);
+    }
+
     public void setCurrentGame(Game game) {
         cache.setCurrentGameName(game.getName());
     }

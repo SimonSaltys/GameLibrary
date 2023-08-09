@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 
 public interface Message {
 
-    static Message NO_MESSAGE = null;
+    static Message NO_MESSAGE = () -> " ";
 
 
-     Component getMessage();
+     String getMessage();
 
 
 

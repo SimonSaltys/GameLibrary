@@ -12,14 +12,14 @@ import org.mineacademy.fo.model.Replacer;
 @RequiredArgsConstructor
 public enum LeaveReason implements Message {
 
-    DISCONNECT("asdasd");
+    DISCONNECT("Player Disconnected");
     private final String message;
 
-    public static final TagResolver NO_RESOLVERS = null;
+
 
     @Override
-    public Component getMessage() {
-        return MessageUtil.makeMini(message, NO_RESOLVERS);
+    public String getMessage() {
+        return message;
     }
 
 

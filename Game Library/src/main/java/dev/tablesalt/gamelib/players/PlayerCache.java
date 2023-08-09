@@ -33,6 +33,7 @@ public class PlayerCache {
 
     @Setter
     private String currentGameName;
+    @Getter
     private GameJoinMode mode;
 
     private PlayerCache(String name, UUID uniqueId) {

@@ -13,8 +13,8 @@ public class GameHeartbeat extends Countdown {
 
     private final SimpleRunnable tickFastRunnable;
 
-    public GameHeartbeat(Game game) {
-        super(SimpleTime.fromSeconds(100));
+    public GameHeartbeat(Game game, SimpleTime timeUntilStop) {
+        super(timeUntilStop);
         this.game = game;
         this.tickFastRunnable = new TickFastRunnable();
 

@@ -14,6 +14,9 @@ import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.Valid;
+import org.mineacademy.fo.menu.Menu;
+
+import java.awt.*;
 
 @RequiredArgsConstructor
 public class PlayerLeaver {
@@ -29,6 +32,7 @@ public class PlayerLeaver {
         String name = game.getName();
         GameIdentifier identifier = cache.getGameIdentifier();
 
+
         Valid.checkBoolean(!game.getState().isStopped(), "Cannot leave player " + player.getName()
                 + "from stopped game " + game.getName() + "!");
 
@@ -36,7 +40,7 @@ public class PlayerLeaver {
                 "Player " + player.getName() + "is not joined in game " + name);
 
         try {
-            tryToLeavePlayerSafely(player);
+            tryToLeavePlayerSafely(player,message);
             // TODO: 3/30/2023 Teleport player to hub when leave, or to their previous location if no hub server support
 
             if (game.getPlayersInGame().isEmpty())
@@ -54,12 +58,14 @@ public class PlayerLeaver {
     /* PRIVATE */
     /*----------------------------------------------------------------*/
 
-    private void tryToLeavePlayerSafely(Player player) {
+
+    private void tryToLeavePlayerSafely(Player player, Message message) {
         PlayerCache cache = PlayerCache.from(player);
 
         game.scoreboard.onPlayerLeave(player);
         game.removePlayer(cache);
-        Common.callEvent(new PlayerLeaveGameEvent(player,game));
+        Common.callEvent(new PlayerLeaveGameEvent(player,game,message));
+        player.closeInventory();
 
         callOnGameLeaveFor(player);
     }
@@ -75,20 +81,12 @@ public class PlayerLeaver {
     }
 
     private void broadcastLeave(Player player) {
-        game.getGameBroadcaster().broadcast(MessageUtil.makeMini(
-                "<gold> <player> <grey> has left the game! (<current_players> / <max_players>)",
-
-                Placeholder.parsed("player",player.getName()),
-                Formatter.number("current_players", game.getPlayerGetter().getPlayers(GameJoinMode.PLAYING).size()),
-                Formatter.number("max_players",game.getMaxPlayers())
-        ));
+        game.getGameBroadcaster().broadcast("&6" + player.getName() + " &7has left the game! " +
+                "(" + game.getPlayerGetter().getPlayers(GameJoinMode.PLAYING).size() + "/" + game.getMaxPlayers() + ")");
     }
 
     private void sendLeaveMessage(Player player) {
-        player.sendMessage(MessageUtil.makeMini("You've left <mode_of_play> the game <name>!",
-                Placeholder.parsed("mode_of_play", PlayerCache.from(player).getMode().getLocalized()),
-                Placeholder.parsed("name",game.getName())
-        ));
+        Messenger.success(player, "You've left " + PlayerCache.from(player).getMode().getLocalized() + " the game " + game.getName() + "!");
 
     }
 

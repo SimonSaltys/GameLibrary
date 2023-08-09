@@ -1,6 +1,7 @@
 package dev.tablesalt.gamelib.tools;
 
 import dev.tablesalt.gamelib.game.helpers.Game;
+import dev.tablesalt.gamelib.game.map.GameMap;
 import dev.tablesalt.gamelib.players.PlayerCache;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -14,36 +15,45 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.Messenger;
 import org.mineacademy.fo.menu.model.ItemCreator;
 import org.mineacademy.fo.remain.CompMaterial;
+import org.mineacademy.fo.visual.VisualTool;
+import org.mineacademy.fo.visual.VisualizedRegion;
+
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 
-public final class LobbyTool extends GameTool<Game>{
+public final class LobbyTool extends GameTool<Game> {
 
     @Getter
     private static final LobbyTool instance = new LobbyTool();
 
     @Override
     protected void onSuccessfulBlockClick(Player player, Game game, Block block, ClickType type) {
-        game.getMapRotator().getCurrentMap().setLobbyLocation(block.getLocation());
+        boolean isPrimaryClick = (type == ClickType.LEFT);
+        GameMap map = game.getMapRotator().getCurrentMap();
+        VisualizedRegion region = map.getLobbyRegion();
 
-        Messenger.success(player,"Lobby set: &l" + Common.shortLocation(block.getLocation()));
+        if (isPrimaryClick)
+            region.updateLocation(block.getLocation(), null);
+        else
+            region.updateLocation(null,block.getLocation());
+
+        map.save();
     }
 
     @Override
-    protected Location getGamePoint(Player player, Game game) {
-
+    protected VisualizedRegion getVisualizedRegion(Player player) {
+        Game game = PlayerCache.from(player).getGameIdentifier().getCurrentGame();
         PlayerCache cache = PlayerCache.from(player);
-
         if(cache.getGameIdentifier().hasGame())
-            return game.getMapRotator().getCurrentMap().getLobbyLocation();
+            return game.getMapRotator().getCurrentMap().getLobbyRegion();
 
         return null;
     }
 
     @Override
     protected String getBlockName(Block block, Player player) {
-        return "&l[&fLobby Point&l]";
+        return "&l[&fLobby point&l]";
     }
 
     @Override
@@ -53,8 +63,12 @@ public final class LobbyTool extends GameTool<Game>{
 
     @Override
     public ItemStack getItem() {
-        return ItemCreator.of(CompMaterial.SHEARS,"&l&3LOBBY TOOL",
+        return ItemCreator.of(CompMaterial.BEETROOT_SEEDS,"&l&3LOBBY TOOL",
                 "",
-                "Use to set lobby point.").makeMenuTool();
+                "Use to set region points",
+                "for an edited game.",
+                "",
+                "&b<< &fLeft click &7– &fPrimary",
+                "&fRight click &7– &fSecondary &b>>").makeMenuTool();
     }
 }

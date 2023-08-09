@@ -36,6 +36,7 @@ public final class RegionTool extends GameTool<Game> {
         else
             region.updateLocation(null,block.getLocation());
 
+        map.save();
     }
 
     @Override

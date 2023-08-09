@@ -1,6 +1,7 @@
 package dev.tablesalt.gamelib.game.helpers;
 
 import dev.tablesalt.gamelib.game.utils.GameUtil;
+import dev.tablesalt.gamelib.game.utils.MessageUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
@@ -20,23 +21,23 @@ public final class GameBroadcaster {
         this.playerGetter = game.getPlayerGetter();
     }
 
-    public void broadcast(Component message) {
+    public void broadcast(String message) {
         GameUtil.checkIntegrity(game);
 
         playerGetter.forEachInAllModes(cache -> {
             Player player = cache.toPlayer();
             if (player != null)
-                player.sendMessage(message);
+                Common.tellNoPrefix(player, message);
         });
     }
 
-    public void broadcastInfo(Component message) {
+    public void broadcastInfo(String message) {
         GameUtil.checkIntegrity(game);
 
         playerGetter.forEachInAllModes(cache -> {
             Player player = cache.toPlayer();
             if (player != null)
-                player.sendMessage(message);
+                Common.tellNoPrefix(player, MessageUtil.makeInfo(message));
         });
 
     }

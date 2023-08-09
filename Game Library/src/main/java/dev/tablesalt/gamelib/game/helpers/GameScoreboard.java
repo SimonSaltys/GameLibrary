@@ -40,13 +40,17 @@ public class GameScoreboard extends SimpleScoreboard {
 
               "min_players", game.getMinPlayers(),
               "state", ItemUtil.bountifyCapitalized(game.getState().toString()),
-              "lobby_set", currentMap.getLobbyLocation() != null,
+              "lobby_set", currentMap.getLobbyRegion().isWhole(),
               "region_set", region != null && region.isWhole(),
               "is_setup", currentMap.isSetup());
 
       message = replaceVariablesLate(player,message);
 
       return message.replace("true", "&aYes").replace("false","&4No");
+    }
+
+    protected boolean showTimeLeft() {
+        return true;
     }
 
     protected String replaceVariablesLate(Player player, String message) { return message; }
@@ -97,7 +101,10 @@ public class GameScoreboard extends SimpleScoreboard {
 
     public final void onGameStart() {
         this.removeRow("Starting in");
-        this.addRows("Time left: {remaining_end}");
+
+        if (showTimeLeft())
+            this.addRows("Time left: {remaining_end}");
+
         this.addStartRows();
     }
 

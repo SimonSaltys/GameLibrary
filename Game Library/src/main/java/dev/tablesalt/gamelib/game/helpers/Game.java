@@ -60,6 +60,10 @@ public abstract class Game extends YamlConfig {
     private final MapRotator mapRotator;
     @Getter
     private final MapLoader mapLoader;
+
+    @Getter
+    private final GameEvents gameEvents;
+
     @Getter
     private final State state;
 
@@ -102,6 +106,7 @@ public abstract class Game extends YamlConfig {
         playerLeaver = compileLeaver();
         starter = compileStarter();
         stopper = compileStopper();
+        gameEvents = compileGameEvents();
         mapLoader = new MapLoader(this);
         playerGetter = new PlayerGetter(this);
         gameBroadcaster = new GameBroadcaster(this);
@@ -111,7 +116,7 @@ public abstract class Game extends YamlConfig {
     }
 
     protected GameHeartbeat compileHeartbeat() {
-        return new GameHeartbeat(this);
+        return new GameHeartbeat(this, SimpleTime.fromSeconds(100));
     }
 
     protected GameScoreboard compileScoreboard() {
@@ -127,6 +132,8 @@ public abstract class Game extends YamlConfig {
     protected PlayerJoiner compileJoiner() {return new PlayerJoiner(this);}
 
     protected PlayerLeaver compileLeaver() {return new PlayerLeaver(this);}
+
+    protected GameEvents compileGameEvents() {return new GameEvents(this); }
 
     @Override
     protected void onLoad() {
@@ -287,7 +294,14 @@ public abstract class Game extends YamlConfig {
     public static Game findByLocation(final Location location) {
         for (final Game game : getGames()) {
             GameMap map = game.getMapRotator().getCurrentMap();
-            if(map != null && map.getRegion().isWhole() && map.getRegion().isWithin(location))
+
+            if (map == null)
+                continue;
+
+            if(map.getRegion().isWhole() && map.getRegion().isWithin(location))
+                return game;
+
+            if (map.getLobbyRegion().isWhole() && map.getLobbyRegion().isWithin(location))
                 return game;
         }
 

@@ -1,6 +1,7 @@
 package dev.tablesalt.gamelib.commands.user;
 
 import dev.tablesalt.gamelib.commands.GameSubCommand;
+import dev.tablesalt.gamelib.game.enums.LeaveReason;
 import dev.tablesalt.gamelib.game.helpers.Game;
 import dev.tablesalt.gamelib.game.utils.Message;
 import dev.tablesalt.gamelib.players.PlayerCache;
@@ -21,7 +22,7 @@ public final class LeaveGameCommand extends GameSubCommand {
 
         Game game = cache.getGameIdentifier().getCurrentGame();
 
-        game.getPlayerLeaver().leavePlayer(player, Message.NO_MESSAGE);
+        game.getPlayerLeaver().leavePlayer(player, LeaveReason.DISCONNECT);
         cache.save();
     }
 }

@@ -1,5 +1,6 @@
 package dev.tablesalt.gamelib.game.utils;
 
+import dev.tablesalt.gamelib.players.PlayerCache;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.kyori.adventure.text.Component;
@@ -18,46 +19,26 @@ import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.function.Consumer;
 
 @UtilityClass
 public class MessageUtil {
-    @Getter
-    public final MiniMessage miniMessage = MiniMessage.miniMessage();
 
-    public Component makeInfo(String message, @Nullable TagResolver... resolvers) {
-        return makeMini("<yellow><bold>INFO!<reset> " + message, resolvers);
+    public String makeInfo(String message) {
+        return "&e&lINFO!&r " + message;
     }
 
-    public Component makeError(String message, @Nullable TagResolver... resolvers) {
+    public String makeError(String message) {
 
-        return makeMini("<red><bold>ERROR!<reset> " + message, resolvers);
-
-    }
-
-    public Component makeSuccessful(String message, @Nullable TagResolver... resolvers) {
-        return  makeMini("<green><bold>SUCCESS!<reset> " + message, resolvers);
+        return "&c&lERROR!&r " + message;
 
     }
 
-    public Component makeMini(String message, TagResolver... resolvers) {
-
-        if (resolvers != null) {
-            return miniMessage.deserialize(message,resolvers);
-        }
-
-
-
-        return miniMessage.deserialize(message);
+    public String makeSuccessful(String message) {
+        return "&a&bSUCCESS!&r " + message;
 
     }
 
-    public Component makeMini(String message) {
-        return miniMessage.deserialize(message);
-    }
-
-    public void sendToConsole(Component component) {
-        Bukkit.getConsoleSender().sendMessage(component);
-    }
 
     public String getPromptPrefix() {
         return "&c&lPROMPT! &r";
@@ -65,5 +46,11 @@ public class MessageUtil {
 
     public void clearTitle(Player player) {
         Remain.sendTitle(player,"","");
+    }
+
+    public void forAllPlayersNotInGame(Consumer<Player> consumer) {
+        for (Player player : Remain.getOnlinePlayers())
+            if (!PlayerCache.from(player).getGameIdentifier().hasGame())
+                consumer.accept(player);
     }
 }

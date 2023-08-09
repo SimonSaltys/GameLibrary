@@ -1,6 +1,7 @@
 package dev.tablesalt.gamelib.game.helpers;
 
 import dev.tablesalt.gamelib.game.enums.GameJoinMode;
+import dev.tablesalt.gamelib.game.utils.GameUtil;
 import dev.tablesalt.gamelib.players.PlayerCache;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.Player;
@@ -33,6 +34,17 @@ public final class PlayerGetter {
                 foundPlayers.add(otherCache);
 
         return Collections.unmodifiableList(foundPlayers);
+    }
+
+    public PlayerCache getPlayerInGame(Player player) {
+        GameUtil.checkIntegrity(game);
+
+            for (final PlayerCache otherCache : getPlayersInAllModes())
+                if (otherCache.getGameIdentifier().hasGame() && otherCache.getGameIdentifier().currentGameEquals(game)
+                        && otherCache.getUniqueId().equals(player.getUniqueId()))
+
+                    return otherCache;
+            return null;
     }
 
     public final List<Player> getBukkitPlayersInAllModes() {

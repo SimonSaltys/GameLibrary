@@ -48,6 +48,17 @@ public class PlayerJoiner {
 
 
     /*----------------------------------------------------------------*/
+    /* OVERRIDABLE LOGIC */
+    /*----------------------------------------------------------------*/
+    protected boolean canJoinExtendedLogic() {
+        return true;
+    }
+
+    protected boolean cleanPlayerOnJoin() {
+        return true;
+    }
+
+    /*----------------------------------------------------------------*/
     /* PRIVATE */
     /*----------------------------------------------------------------*/
 
@@ -72,7 +83,7 @@ public class PlayerJoiner {
             return false;
         }
 
-        if (state.isEdited() && map.getLobbyLocation() == null) {
+        if (state.isEdited() && map.getRegion().isWhole()) {
             Messenger.error(player,"Game " + name + " does not have a lobby point set. Please set one up.");
             return false;
         }
@@ -107,6 +118,7 @@ public class PlayerJoiner {
 
         if (state.isPlayed() && joinMode == GameJoinMode.PLAYING) {
             Messenger.error(player, "Game " +  name + " has already started. Type /game spectate " + name + " to observe.");
+            return false;
         }
 
         //is the game ready to be played?
@@ -121,7 +133,8 @@ public class PlayerJoiner {
             Messenger.error(player, "Arena " + name + " is full (" + game.getMaxPlayers() + " players)!");
             return false;
         }
-        return true;
+
+        return canJoinExtendedLogic();
     }
 
     private boolean preparePlayer(PlayerCache cache, GameJoinMode mode) {
@@ -131,9 +144,9 @@ public class PlayerJoiner {
 
 
         if (mode != GameJoinMode.EDITING) {
-            GameUtil.teleport(player, game.getMapRotator().getCurrentMap().getLobbyLocation());
+            GameUtil.teleport(player, game.getMapRotator().getCurrentMap().getLobbyRegion().getCenter());
 
-            PlayerUtil.normalize(player,true);
+            PlayerUtil.normalize(player,cleanPlayerOnJoin());
         }
 
         try {
@@ -150,13 +163,8 @@ public class PlayerJoiner {
     }
 
     private void broadcastJoinMessage(Player player) {
-        game.getGameBroadcaster().broadcast(MessageUtil.getMiniMessage().deserialize(
-                "<gold> <player> <grey> has joined the game! (<current_players> / <max_players>)",
-
-                Placeholder.parsed("player",player.getName()),
-                Formatter.number("current_players", game.getPlayersInGame().size()),
-                Formatter.number("max_players",game.getMaxPlayers())
-        ));
+        game.getGameBroadcaster().broadcast("&6" + player.getName() + " &7has joined the game! " +
+                "(" + game.getPlayersInGame().size() + "/" + game.getMaxPlayers() + ")");
 
     }
 }
