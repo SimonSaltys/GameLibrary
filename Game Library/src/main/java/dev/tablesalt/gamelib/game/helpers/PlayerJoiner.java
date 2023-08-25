@@ -1,5 +1,7 @@
 package dev.tablesalt.gamelib.game.helpers;
 
+import com.sk89q.worldguard.bukkit.event.block.PlaceBlockEvent;
+import dev.tablesalt.gamelib.event.PlayerJoinGameEvent;
 import dev.tablesalt.gamelib.game.enums.State;
 import dev.tablesalt.gamelib.game.utils.GameUtil;
 import dev.tablesalt.gamelib.game.enums.GameJoinMode;
@@ -43,6 +45,8 @@ public class PlayerJoiner {
 
         game.scoreboard.onPlayerJoin(player);
         GameUtil.checkIntegrity(game);
+
+        Common.callEvent(new PlayerJoinGameEvent(player,game,mode));
         return true;
     }
 

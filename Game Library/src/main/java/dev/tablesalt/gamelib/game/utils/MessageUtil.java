@@ -36,7 +36,10 @@ public class MessageUtil {
 
     public String makeSuccessful(String message) {
         return "&a&bSUCCESS!&r " + message;
+    }
 
+    public String makeScary(String message) {
+        return "&c&lOH NO! " + message;
     }
 
 
