@@ -1,6 +1,7 @@
 package dev.tablesalt.gamelib.commands.admin;
 
 import dev.tablesalt.gamelib.commands.GameSubCommand;
+import dev.tablesalt.gamelib.event.RemoveGameEvent;
 import dev.tablesalt.gamelib.game.helpers.Game;
 import dev.tablesalt.gamelib.game.map.GameMap;
 import org.mineacademy.fo.Common;
@@ -23,6 +24,7 @@ public final class RemoveCommand extends GameSubCommand {
          checkGameActive(game);
 
         if (game != null) {
+            Common.callEvent(new RemoveGameEvent(game));
             Game.removeGame(game);
             tellSuccess("Successfully deleted game " + game + " and its respective maps");
        }

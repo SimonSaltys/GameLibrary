@@ -2,9 +2,11 @@ package dev.tablesalt.gamelib.game.helpers;
 
 import dev.tablesalt.gamelib.game.enums.GameJoinMode;
 import dev.tablesalt.gamelib.game.enums.GameState;
+import dev.tablesalt.gamelib.game.enums.State;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.Valid;
 import org.mineacademy.fo.exception.FoException;
 
 public class Starter {
@@ -19,12 +21,38 @@ public class Starter {
         this.startCountdown = new GameCountdownStart(game);
     }
 
-   protected void onGameStart() {
 
-    }
 
-    protected void onGameStartFor(Player player) {
+    /*----------------------------------------------------------------*/
+    /* OVERRIDABLE LOGIC */
+    /*----------------------------------------------------------------*/
 
+   protected void onGameStart() {}
+
+    protected void onGameStartFor(Player player) {}
+
+    protected boolean startGameWithCounter() { return true; }
+
+    //starts the game and skips the countdown
+    protected final void beginPlaying() {
+        String name = game.getName();
+        State state = game.getState();
+
+        Valid.checkBoolean(state.isLobby(),"Cannot start game " + name + " while in the " + state + " mode");
+        state.setState(GameState.PLAYED);
+
+        try {
+            game.getHeartbeat().launch();
+            game.getScoreboard().onGameStart();
+            game.getStarter().onGameStart();
+
+            closeAllInventories();
+            startGameForAll();
+
+        } catch (Throwable t) {
+            Common.throwError(t,"Failed to start game " + name + " stopping for safety");
+            game.getStopper().stop();
+        }
     }
 
     /**
@@ -47,7 +75,10 @@ public class Starter {
         }
 
         if (game.getState().isLobby() && canStart())
-            startCountdownToPlay();
+            if (startGameWithCounter())
+                startCountdownToPlay();
+            else
+                beginPlaying();
     }
 
     private void startCountdownToPlay() {
@@ -70,13 +101,29 @@ public class Starter {
             startCountdown.cancel();
     }
 
+
+
     public final int getTimeLeft() {
         return startCountdown.getTimeLeft();
     }
 
-    private boolean canStart() {
+    protected boolean canStart() {
         return game.getPlayersInGame().size() >= game.getMinPlayers();
     }
 
+    private void closeAllInventories() {
+        game.getPlayerGetter().forEachInAllModes(cache -> {
+            Player player = cache.toPlayer();
+            Valid.checkNotNull(player,"Found null player in game " + game.getName() + " while starting");
+            player.closeInventory();
+        });
+    }
 
+    private void startGameForAll() {
+        game.getPlayerGetter().forEachInAllModes(cache -> {
+            Player player = cache.toPlayer();
+            Valid.checkNotNull(player,"Found null player in game " + game.getName() + " while starting");
+            game.getStarter().onGameStartFor(player);
+        });
+    }
 }

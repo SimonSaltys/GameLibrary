@@ -142,7 +142,7 @@ public abstract class SimpleRunnable implements Runnable{
     /**
      * Cancels this countdown, failing if it is not scheduled (use {@link #isRunning()})
      */
-    public final void cancel() {
+    public void cancel() {
         Bukkit.getScheduler().cancelTask(this.getTaskId());
 
         this.taskId = -1;

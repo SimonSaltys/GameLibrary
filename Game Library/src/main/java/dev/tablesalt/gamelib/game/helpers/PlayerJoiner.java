@@ -62,6 +62,8 @@ public class PlayerJoiner {
         return true;
     }
 
+    protected boolean teleportOnJoin() {return true;}
+
     /*----------------------------------------------------------------*/
     /* PRIVATE */
     /*----------------------------------------------------------------*/
@@ -148,7 +150,8 @@ public class PlayerJoiner {
 
 
         if (mode != GameJoinMode.EDITING) {
-            GameUtil.teleport(player, game.getMapRotator().getCurrentMap().getLobbyRegion().getCenter());
+            if (teleportOnJoin())
+                GameUtil.teleport(player, game.getMapRotator().getCurrentMap().getLobbyRegion().getCenter());
 
             PlayerUtil.normalize(player,cleanPlayerOnJoin());
         }
